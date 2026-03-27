@@ -18,11 +18,7 @@ const CardContact = ({ contact, onDeleted = () => {} }) => {
 		<li className="list-group-item d-flex justify-content-center">
 			<div className="d-flex align-items-center w-75">
 				<div className="col-md-3 d-flex justify-content-center">
-					<img
-						className="rounded-circle"
-						src="https://picsum.photos/170/170"
-						alt="Contacto"
-					/>
+					<i className="fa-solid fa-user fa-4x" aria-label="Contacto"></i>
 				</div>
 
 				<div className="col-md-6">
@@ -38,7 +34,7 @@ const CardContact = ({ contact, onDeleted = () => {} }) => {
 					</Link>
 
 					<button type="button" className="btn btn-link p-0" data-bs-toggle="modal" data-bs-target={`#${modalId}`}>
-						<i className="fa-solid fa-trash"></i>
+						<i className="fa-solid fa-delete-left"></i>
 					</button>
 
 					<div className="modal fade" id={modalId} tabIndex="-1" aria-hidden="true">

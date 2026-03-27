@@ -51,16 +51,15 @@ const EditContact = () => {
 
 	return (
 		<div className="container py-4">
-			<h1 className="text-center mb-4">Update Contact</h1>
+			<h1 className="text-center mb-4">Editar contacto</h1>
 
 			<form className="container" onSubmit={handleSubmit}>
 				<div className="mb-3">
-					<label htmlFor="editName" className="form-label">Full Name</label>
+					<label htmlFor="editName" className="form-label">Nombre</label>
 					<input
 						id="editName"
 						type="text"
 						className="form-control"
-						placeholder="Full name"
 						onChange={(event) => setName(event.target.value)}
 						value={name}
 					/>
@@ -72,38 +71,37 @@ const EditContact = () => {
 						id="editEmail"
 						type="email"
 						className="form-control"
-						placeholder="Enter email"
 						onChange={(event) => setEmail(event.target.value)}
 						value={email}
 					/>
 				</div>
 
 				<div className="mb-3">
-					<label htmlFor="editPhone" className="form-label">Phone</label>
+					<label htmlFor="editPhone" className="form-label">Teléfono</label>
 					<input
 						id="editPhone"
 						type="text"
 						className="form-control"
-						placeholder="Enter phone"
 						onChange={(event) => setPhone(event.target.value)}
 						value={phone}
 					/>
 				</div>
 
 				<div className="mb-3">
-					<label htmlFor="editAddress" className="form-label">Address</label>
+					<label htmlFor="editAddress" className="form-label">Dirección</label>
 					<input
 						id="editAddress"
 						type="text"
 						className="form-control"
-						placeholder="Enter address"
 						onChange={(event) => setAddress(event.target.value)}
 						value={address}
 					/>
 				</div>
 
 				<div className="mb-3">
-					<button type="submit" className="btn btn-primary">Update Contact</button>
+					<button type="submit" className="btn btn-primary" aria-label="Editar contacto" title="Editar contacto">
+						Guardar
+					</button>
 				</div>
 			</form>
 

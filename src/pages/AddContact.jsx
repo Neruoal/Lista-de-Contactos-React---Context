@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 
 const initialForm = {
@@ -11,6 +11,7 @@ const initialForm = {
 
 const AddContact = () => {
 	const { store } = useGlobalReducer();
+	const navigate = useNavigate();
 	const { id } = useParams();
 	const isEditing = Boolean(id);
 
@@ -55,6 +56,7 @@ const AddContact = () => {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(payload)
 			});
+			navigate("/");
 		} catch (error) {
 			console.error("Error al crear contacto:", error);
 		}
@@ -62,16 +64,15 @@ const AddContact = () => {
 
 	return (
 		<div className="container py-4">
-			<h1 className="text-center mb-4">{isEditing ? "Editar contacto" : "Add a New Contact"}</h1>
+			<h1 className="text-center mb-4">Añadir contacto</h1>
 
 			<form className="container" onSubmit={handleSubmit}>
 				<div className="mb-3">
-					<label htmlFor="contactName" className="form-label">Full Name</label>
+					<label htmlFor="contactName" className="form-label">Nombre</label>
 					<input
 						id="contactName"
 						type="text"
 						className="form-control"
-						placeholder="Full name"
 						name="name"
 						value={formValues.name}
 						onChange={handleChange}
@@ -85,7 +86,6 @@ const AddContact = () => {
 						id="contactEmail"
 						type="email"
 						className="form-control"
-						placeholder="Enter email"
 						name="email"
 						value={formValues.email}
 						onChange={handleChange}
@@ -94,12 +94,11 @@ const AddContact = () => {
 				</div>
 
 				<div className="mb-3">
-					<label htmlFor="contactPhone" className="form-label">Phone</label>
+					<label htmlFor="contactPhone" className="form-label">Teléfono</label>
 					<input
 						id="contactPhone"
 						type="text"
 						className="form-control"
-						placeholder="Enter phone"
 						name="phone"
 						value={formValues.phone}
 						onChange={handleChange}
@@ -108,12 +107,11 @@ const AddContact = () => {
 				</div>
 
 				<div className="mb-3">
-					<label htmlFor="contactAddress" className="form-label">Address</label>
+					<label htmlFor="contactAddress" className="form-label">Dirección</label>
 					<input
 						id="contactAddress"
 						type="text"
 						className="form-control"
-						placeholder="Enter address"
 						name="address"
 						value={formValues.address}
 						onChange={handleChange}
@@ -122,11 +120,11 @@ const AddContact = () => {
 				</div>
 
 				<div className="mb-3">
-					<button type="submit" className="btn btn-primary">Save</button>
+					<button type="submit" className="btn btn-primary">Guardar</button>
 				</div>
 			</form>
 
-			<Link to="/">Volver a Contacts</Link>
+			<Link to="/">Volver</Link>
 		</div>
 	);
 };

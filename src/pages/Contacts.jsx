@@ -33,18 +33,14 @@ const Contacts = () => {
 		<div className="w-75 mx-auto">
 			<div className="d-flex justify-content-end">
 				<Link to="/addContact" className="btn btn-success">
-					Add New Contact
+					Añadir contacto
 				</Link>
 			</div>
 
 			<ul className="list-group mt-3">
-				{contacts.length > 0 ? (
-					contacts.map((contact) => (
-						<CardContact contact={contact} key={contact.id} onDeleted={getContacts} />
-					))
-				) : (
-					<li className="list-group-item text-center text-muted">No contacts yet</li>
-				)}
+				{contacts.map((contact) => (
+					<CardContact contact={contact} key={contact.id} onDeleted={getContacts} />
+				))}
 			</ul>
 		</div>
 	);
