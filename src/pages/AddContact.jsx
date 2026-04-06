@@ -1,65 +1,22 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 
-const initialForm = {
-	name: "",
-	phone: "",
-	email: "",
-	address: ""
-};
 
 const AddContact = () => {
-	const { store } = useGlobalReducer();
 	const navigate = useNavigate();
-	const { id } = useParams();
-	const isEditing = Boolean(id);
+	const { createContact } = useGlobalReducer();
+	const [name, setName] = useState("");
+	const [email, setEmail] = useState("");
+	const [phone, setPhone] = useState("");
+	const [address, setAddress] = useState("");
 
-	const [formValues, setFormValues] = useState(initialForm);
-
-	useEffect(() => {
-		if (!isEditing) return;
-
-		const contactToEdit = store.contacts.find((contact) => String(contact.id) === String(id));
-		if (!contactToEdit) return;
-
-		setFormValues({
-			name: contactToEdit.name ?? "",
-			phone: contactToEdit.phone ?? "",
-			email: contactToEdit.email ?? "",
-			address: contactToEdit.address ?? ""
-		});
-	}, [id, isEditing, store.contacts]);
-
-	const handleChange = (event) => {
-		const { name, value } = event.target;
-
-		setFormValues({
-			...formValues,
-			[name]: value
-		});
-	};
-
-	const handleSubmit = async (event) => {
+	const handleSubmit = (event) => {
 		event.preventDefault();
 
-		const payload = {
-			name: formValues.name.trim(),
-			phone: formValues.phone.trim(),
-			email: formValues.email.trim(),
-			address: formValues.address.trim()
-		};
-
-		try {
-			await fetch("https://playground.4geeks.com/contact/agendas/manuel1991/contacts", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload)
-			});
-			navigate("/");
-		} catch (error) {
-			console.error("Error al crear contacto:", error);
-		}
+		createContact({ name: name.trim(), email: email.trim(), phone: phone.trim(), address: address.trim() })
+			.then(() => navigate("/"))
+			.catch(err => console.error("Error al crear contacto:", err));
 	};
 
 	return (
@@ -73,9 +30,8 @@ const AddContact = () => {
 						id="contactName"
 						type="text"
 						className="form-control"
-						name="name"
-						value={formValues.name}
-						onChange={handleChange}
+						value={name}
+						onChange={(event) => setName(event.target.value)}
 						required
 					/>
 				</div>
@@ -86,9 +42,8 @@ const AddContact = () => {
 						id="contactEmail"
 						type="email"
 						className="form-control"
-						name="email"
-						value={formValues.email}
-						onChange={handleChange}
+						value={email}
+						onChange={(event) => setEmail(event.target.value)}
 						required
 					/>
 				</div>
@@ -99,9 +54,8 @@ const AddContact = () => {
 						id="contactPhone"
 						type="text"
 						className="form-control"
-						name="phone"
-						value={formValues.phone}
-						onChange={handleChange}
+						value={phone}
+						onChange={(event) => setPhone(event.target.value)}
 						required
 					/>
 				</div>
@@ -112,9 +66,8 @@ const AddContact = () => {
 						id="contactAddress"
 						type="text"
 						className="form-control"
-						name="address"
-						value={formValues.address}
-						onChange={handleChange}
+						value={address}
+						onChange={(event) => setAddress(event.target.value)}
 						required
 					/>
 				</div>

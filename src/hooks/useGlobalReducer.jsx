@@ -1,24 +1,61 @@
 // Import necessary hooks and functions from React.
-import { useContext, useReducer, createContext } from "react";
-import storeReducer, { initialStore } from "../store"  // Import the reducer and the initial state.
+import { useContext, useState, createContext } from "react";
 
-// Create a context to hold the global state of the application
-// We will call this global state the "store" to avoid confusion while using local states
-const StoreContext = createContext()
+const BASE_URL = "https://playground.4geeks.com/contact";
+const AGENDA_SLUG = "manuel1991";
 
-// Define a provider component that encapsulates the store and warps it in a context provider to 
-// broadcast the information throught all the app pages and components.
+const StoreContext = createContext();
+
 export function StoreProvider({ children }) {
-    // Initialize reducer with the initial state.
-    const [store, dispatch] = useReducer(storeReducer, initialStore())
-    // Provide the store and dispatch method to all child components.
-    return <StoreContext.Provider value={{ store, dispatch }}>
+    const [contacts, setContacts] = useState([]);
+
+    const store = {
+        contacts,
+        getContacts: () =>
+            fetch(`${BASE_URL}/agendas/${AGENDA_SLUG}/contacts`)
+                .then(resp => resp.json())
+                .then(data => setContacts(Array.isArray(data.contacts) ? data.contacts : []))
+                .catch(err => console.error("Error al obtener contactos:", err)),
+
+        createContact: (data) =>
+            fetch(`${BASE_URL}/agendas/${AGENDA_SLUG}/contacts`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+                .then(resp => resp.json())
+                .then(newContact => setContacts(prev => [newContact, ...prev]))
+                .catch(err => console.error("Error al crear contacto:", err)),
+
+        updateContact: (id, data) =>
+            fetch(`${BASE_URL}/agendas/${AGENDA_SLUG}/contacts/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+                .then(resp => resp.json())
+                .then(updated => setContacts(prev =>
+                    prev.map(c => c.id === id ? { ...c, ...updated } : c)
+                ))
+                .catch(err => console.error("Error al actualizar contacto:", err)),
+
+        deleteContact: (id) =>
+            fetch(`${BASE_URL}/agendas/${AGENDA_SLUG}/contacts/${id}`, { method: "DELETE" })
+                .then(resp => {
+                    if (resp.status === 404)
+                        return fetch(`${BASE_URL}/agendas/${AGENDA_SLUG}`, { method: "POST" })
+                            .then(() => store.deleteContact(id));
+                    if (resp.ok)
+                        setContacts(prev => prev.filter(c => c.id !== id));
+                })
+                .catch(err => console.error("Error al borrar contacto:", err))
+    };
+
+    return <StoreContext.Provider value={store}>
         {children}
-    </StoreContext.Provider>
+    </StoreContext.Provider>;
 }
 
-// Custom hook to access the global state and dispatch function.
 export default function useGlobalReducer() {
-    const { dispatch, store } = useContext(StoreContext)
-    return { dispatch, store };
+    return useContext(StoreContext);
 }
