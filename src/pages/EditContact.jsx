@@ -29,11 +29,7 @@ const EditContact = () => {
         event.preventDefault();
 
         updateContact(id, { name: name.trim(), email: email.trim(), phone: phone.trim(), address: address.trim() })
-            .then(() => {
-                alert("Contacto actualizado");
-                navigate("/");
-            })
-            .catch(err => console.error("Error al editar contacto:", err));
+            .then(() => navigate("/"));
     };
 
     return (
